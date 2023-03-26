@@ -1,0 +1,59 @@
+//Macro draw_elipse
+//This macro is used to analyse the recruitment of host factors to a bacterial surface.
+//It fits a binary mask (corresponding to the bacteria plus host factors to analyse) to an
+//elipse.
+//Then,it finds the intersection of the max axis of the elipse and the reduced contour of
+//the mask and saves it as ROI sets.
+//Writen by Ana T. Lopez-Jimenez at Serge Mostowy lab (@ LSHTM) in 2021.
+
+
+
+name = getTitle();
+dir = getDirectory("image");
+run("Set Measurements...", " area mean centroid fit decimal=6");
+ roiManager("Select", 0);
+ run("Enlarge...", "enlarge=-0.10");
+ roiManager("Update");
+ run("Set Scale...", "distance=1 known=1 pixel=1 unit=pixel");
+ run("Fit Ellipse");
+ roiManager("Measure");
+ run("RGB Color");
+ for(i=0; i<nResults; i++) {
+ x=getResult('X',i);
+ y=getResult('Y',i);
+ d=getResult('Major',i);
+ a = getResult('Angle',i)*PI/180;
+ setColor("red");
+ makeLine(x+(d/2)*cos(a),y-(d/2)*sin(a),x-(d/2)*cos(a),y+(d/2)*sin(a));
+ d=getResult('Minor',i);
+ a=a+PI/2;
+ roiManager("Add");
+
+ }
+roiManager("Save", dir + File.separator + "_ROI_reduced_object_line.zip");
+run("Select None");
+run("Duplicate...", " ");
+setBackgroundColor(0, 0, 0);
+run("Select All");
+run("Clear", "slice");
+roiManager("Select", 0);
+run("Draw", "slice");
+run("Select All");
+saveAs("Tiff", dir + File.separator + "1.tif");
+run("Select None");
+
+run("Duplicate...", " ");
+setBackgroundColor(0, 0, 0);
+run("Select All");
+run("Clear", "slice");
+roiManager("Select", 1);
+run("Draw", "slice");
+run("Select All");
+saveAs("Tiff", dir + File.separator + "2.tif");
+imageCalculator("AND create", "1.tif", "2.tif");
+run("Make Binary");
+saveAs("Tiff", dir + File.separator + "3.tif");
+run("Set Measurements...", "area mean centroid fit display redirect=None decimal=3");
+run("Analyze Particles...", "display exclude clear add");
+roiManager("Deselect");
+roiManager("Save", dir + File.separator + "_ROI_intersection.zip");

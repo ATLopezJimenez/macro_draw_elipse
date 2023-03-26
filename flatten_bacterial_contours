@@ -1,0 +1,97 @@
+//Macro Flatten_bacterial_contours
+
+//This macro is used to linearise the bacterial contour on a MAX projection with 4
+//channels
+//It should be used after the macro draw_elipse. The ROI set used should contain the
+//two intersection points identified with the macro draw_elipse and then the reduced
+//contour also obtained with the macro draw_elipse.
+//Writen by Ana T. Lopez-Jimenez at Serge Mostowy lab (@ LSHTM) in 2021.
+
+
+name = getTitle();
+nameminustif = substring(name, 0, indexOf(name, ".tif"))
+nameduplicate = nameminustif + "-1.tif"
+dir = getDirectory("image");
+run("Split Channels");
+run("Line Width...", "line=0.5");
+selectWindow("C1-" + name);
+run("Duplicate...", " ");
+roiManager("Select", 2);
+run("Area to Line", "title=["+"C1-"+ nameduplicate +"]" );
+run("Straighten...", "title=["+"C1-"+ nameduplicate +"] line=50");
+saveAs("Tiff", dir + File.separator + "C1-" + "_straight");
+selectWindow("C1-" + name);
+run("RGB Color");
+setColor("white");
+13
+roiManager("Select", 0);
+run("Draw", "slice");
+setColor("yellow");
+roiManager("Select", 1);
+run("Draw", "slice");
+roiManager("Select", 2);
+run("Area to Line", "title=["+"C1-"+ name +"]" );
+run("Straighten...", "title=["+"C1-"+ name +"] line=50");
+saveAs("Tiff", dir + File.separator + "C1-" + "_straight_dots");
+close();
+run("Line Width...", "line=0.5");
+selectWindow("C2-" + name);
+run("Duplicate...", " ");
+roiManager("Select", 2);
+run("Area to Line", "title=["+"C1-"+ nameduplicate +"]" );
+run("Straighten...", "title=["+"C1-"+ nameduplicate +"] line=50");
+saveAs("Tiff", dir + File.separator + "C2-" + "_straight");
+selectWindow("C2-" + name);
+run("RGB Color");
+setColor("white");
+roiManager("Select", 0);
+run("Draw", "slice");
+setColor("yellow");
+roiManager("Select", 1);
+run("Draw", "slice");
+roiManager("Select", 2);
+run("Area to Line", "title=["+"C2-"+ name +"]" );
+run("Straighten...", "title=["+"C2-"+ name +"] line=50");
+saveAs("Tiff", dir + File.separator + "C2-" + "_straight_dots");
+close();
+run("Line Width...", "line=0.5");
+selectWindow("C3-" + name);
+run("Duplicate...", " ");
+roiManager("Select", 2);
+run("Area to Line", "title=["+"C3-"+ nameduplicate +"]" );
+run("Straighten...", "title=["+"C3-"+ nameduplicate +"] line=50");
+saveAs("Tiff", dir + File.separator + "C3-" + "_straight");
+selectWindow("C3-" + name);
+run("RGB Color");
+setColor("white");
+roiManager("Select", 0);
+run("Draw", "slice");
+setColor("yellow");
+14
+roiManager("Select", 1);
+run("Draw", "slice");
+roiManager("Select", 2);
+run("Area to Line", "title=["+"C3-"+ name +"]" );
+run("Straighten...", "title=["+"C3-"+ name +"] line=50");
+saveAs("Tiff", dir + File.separator + "C3-" + "_straight_dots");
+close();
+run("Line Width...", "line=0.5");
+selectWindow("C4-" + name);
+run("Duplicate...", " ");
+roiManager("Select", 2);
+run("Area to Line", "title=["+"C1-"+ nameduplicate +"]" );
+run("Straighten...", "title=["+"C1-"+ nameduplicate +"] line=50");
+saveAs("Tiff", dir + File.separator + "C4-" + "_straight");
+selectWindow("C4-" + name);
+run("RGB Color");
+setColor("white");
+roiManager("Select", 0);
+run("Draw", "slice");
+setColor("yellow");
+roiManager("Select", 1);
+run("Draw", "slice");
+roiManager("Select", 2);
+run("Area to Line", "title=["+"C4-"+ name +"]" );
+run("Straighten...", "title=["+"C4-"+ name +"] line=50");
+saveAs("Tiff", dir + File.separator + "C4-" + "_straight_dots");
+close();
